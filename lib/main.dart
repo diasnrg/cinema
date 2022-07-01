@@ -1,7 +1,6 @@
 import 'package:cinema/view/home_view.dart';
 import 'package:flutter/material.dart';
 
-
 void main() {
   runApp(const App());
 }
@@ -12,6 +11,7 @@ class App extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       themeMode: ThemeMode.dark,
       darkTheme: ThemeData.dark(),
       home: const Scaffold(

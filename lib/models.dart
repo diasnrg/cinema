@@ -1,4 +1,6 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cinema/network.dart';
+import 'package:flutter/material.dart';
 
 class Film {
   Film({
@@ -7,7 +9,7 @@ class Film {
     required this.releaseDate,
     required this.voteAverage,
     required this.posterPath,
-    this.filmDetails,
+    this.details,
   });
 
   final int id;
@@ -15,7 +17,8 @@ class Film {
   final String releaseDate;
   final double voteAverage;
   final String posterPath;
-  late final FilmDetails? filmDetails;
+  FilmDetails? details;
+  Widget? _foregroundImage;
 
   factory Film.fromJson(Map<String, dynamic> json) {
     return Film(
@@ -27,15 +30,24 @@ class Film {
     );
   }
 
-  bool get isFilmDetailsLoaded => filmDetails != null;
+  bool get isFilmDetailsLoaded => details != null;
+
+// delete widget from model
+  Widget? get foregroundImage {
+    _foregroundImage ??= CachedNetworkImage(
+      imageUrl: Network.posterImageUrl(this),
+      fit: BoxFit.cover,
+    );
+    return _foregroundImage;
+  }
 
   Future<void> loadFilmDetails() async {
-    filmDetails = await Network.getFilmDetails(this); // handle exception
+    details ??= await Network.getFilmDetails(this); // handle exception
   }
 }
 
 class FilmDetails {
-  const FilmDetails({
+  FilmDetails({
     required this.id,
     required this.isForAdults,
     required this.backdropPath,
@@ -47,19 +59,27 @@ class FilmDetails {
 
   final int id;
   final bool isForAdults;
-  final String backdropPath;
   final int revenue;
   final List<String> genres;
   final int runtime;
   final String overview;
+  final String backdropPath;
+  Widget? _backgroundImage;
+
+  Widget? get backgroundImage {
+    return _backgroundImage ??= CachedNetworkImage(
+      imageUrl: Network.backdropImageUrl(this),
+      fit: BoxFit.cover,
+    );
+  }
 
   factory FilmDetails.fromJson(Map<String, dynamic> json) {
     return FilmDetails(
       id: json['id'],
-      isForAdults: json['adults'],
+      isForAdults: json['adult'],
       backdropPath: json['backdrop_path'],
       revenue: json['revenue'],
-      genres: (json['genres'] as List<Map<String, dynamic>>)
+      genres: (json['genres'] as List<dynamic>)
           .toList()
           .map((e) => e['name'] as String)
           .toList(),

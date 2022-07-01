@@ -24,7 +24,7 @@ class _HomeState extends State<Home> {
   Widget build(BuildContext context) {
     return CustomScrollView(
       slivers: [
-        const SliverToBoxAdapter(child: Header()),
+        const SliverToBoxAdapter(child: _Header()),
         FutureBuilder<List<Film>>(
           future: films,
           builder: ((context, snapshot) {
@@ -54,8 +54,8 @@ class _HomeState extends State<Home> {
   }
 }
 
-class Header extends StatelessWidget {
-  const Header({Key? key}) : super(key: key);
+class _Header extends StatelessWidget {
+  const _Header({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

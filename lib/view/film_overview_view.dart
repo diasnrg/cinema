@@ -1,16 +1,15 @@
-import 'package:cinema/models.dart';
-import 'package:cinema/network.dart';
+import 'package:cinema/view/film_details_view.dart';
 import 'package:flutter/material.dart';
+import 'package:cinema/models.dart';
 
 class FilmOverview extends StatelessWidget {
-  FilmOverview(
+  const FilmOverview(
     this.film, {
     Key? key,
-  })  : imageUrl = Network.posterImageUrl(film),
-        super(key: key);
+  }) : super(key: key);
+
   final Film film;
 
-  final String imageUrl;
   final textStyle = const TextStyle(
     color: Colors.white,
     // fontFamily: 'Rubik',
@@ -21,7 +20,14 @@ class FilmOverview extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap: _showFilmDetails,
+      onTap: () {
+        film.loadFilmDetails().then((_) {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: ((context) => FilmDetailsView(film))),
+          );
+        });
+      },
       child: Container(
         clipBehavior: Clip.hardEdge,
         decoration: BoxDecoration(
@@ -31,17 +37,15 @@ class FilmOverview extends StatelessWidget {
         child: Stack(
           fit: StackFit.expand,
           children: [
-            Image.network(imageUrl, fit: BoxFit.cover),
+            film.foregroundImage ?? const SizedBox.shrink(),
             _gradient,
-            _filmTitle,
+            _titleAndReleaseDate,
             _votes,
           ],
         ),
       ),
     );
   }
-
-  void _showFilmDetails() {}
 
   Widget get _gradient {
     return Container(
@@ -58,7 +62,7 @@ class FilmOverview extends StatelessWidget {
     );
   }
 
-  Widget get _filmTitle {
+  Widget get _titleAndReleaseDate {
     return Positioned(
       left: 12,
       bottom: 14,
