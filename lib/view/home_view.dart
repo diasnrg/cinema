@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:cinema/view/film_overview_view.dart';
 import 'package:cinema/models.dart';
 import 'package:cinema/network.dart';
+import 'package:cinema/theme.dart';
 
 class Home extends StatefulWidget {
   const Home({Key? key}) : super(key: key);
@@ -25,18 +26,21 @@ class _HomeState extends State<Home> {
     return CustomScrollView(
       slivers: [
         const SliverToBoxAdapter(child: _Header()),
-        FutureBuilder<List<Film>>(
-          future: films,
-          builder: ((context, snapshot) {
-            if (snapshot.hasData) {
-              final films = snapshot.data!;
-              return _grid(films);
-            }
+        SliverPadding(
+          padding: const EdgeInsets.all(12),
+          sliver: FutureBuilder<List<Film>>(
+            future: films,
+            builder: ((context, snapshot) {
+              if (snapshot.hasData) {
+                final films = snapshot.data!;
+                return _grid(films);
+              }
 
-            return const SliverToBoxAdapter(
-              child: Center(child: CircularProgressIndicator()),
-            );
-          }),
+              return const SliverToBoxAdapter(
+                child: Center(child: CircularProgressIndicator()),
+              );
+            }),
+          ),
         ),
       ],
     );
@@ -60,16 +64,13 @@ class _Header extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.only(top: 32, bottom: 16),
+      padding: const EdgeInsets.only(top: 48, left: 12, right: 12),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Text(
             'Фильмы',
-            style: Theme.of(context)
-                .textTheme
-                .headlineMedium
-                ?.copyWith(fontSize: 32),
+            style: CinemaTheme.textStyle.copyWith(fontSize: 32),
           ),
           // TODO: filter...
         ],

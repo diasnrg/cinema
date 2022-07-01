@@ -1,3 +1,4 @@
+import 'package:cinema/theme.dart';
 import 'package:cinema/view/home_view.dart';
 import 'package:flutter/material.dart';
 
@@ -14,9 +15,9 @@ class App extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       themeMode: ThemeMode.dark,
       darkTheme: ThemeData.dark(),
-      home: const Scaffold(
-        backgroundColor: Color.fromRGBO(21, 20, 31, 1),
-        body: Home(),
+      home: Scaffold(
+        backgroundColor: CinemaTheme.backgroundColor,
+        body: const Home(),
       ),
     );
   }

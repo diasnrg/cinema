@@ -1,4 +1,5 @@
 import 'package:cinema/models.dart';
+import 'package:cinema/theme.dart';
 import 'package:flutter/material.dart';
 
 class FilmDetailsView extends StatelessWidget {
@@ -8,29 +9,39 @@ class FilmDetailsView extends StatelessWidget {
   }) : super(key: key);
 
   final Film film;
+  static const double padding = 16;
+  static const double backgroundImageHeight = 400;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color.fromRGBO(21, 20, 31, 1),
+      backgroundColor: CinemaTheme.backgroundColor,
       body: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Stack(
             children: [
               _backgroundImage,
               _gradient,
-              _foregroundImage,
-              _backNavigation(context),
-              _headerInfo,
+              _title(context),
+              _header,
             ],
           ),
-          const SizedBox(height: 16),
-          const Text('О фильме'),
-          const SizedBox(height: 16),
-          Text(film.details?.genres.toString() ?? ''),
-          const SizedBox(height: 16),
-          Text(film.details?.overview ?? ''),
+          Padding(
+            padding: const EdgeInsets.all(padding),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const SizedBox(height: padding),
+                Text('О фильме', style: CinemaTheme.detailsTextStyle),
+                const SizedBox(height: padding),
+                Text(film.details?.genres.join(', ') ?? '',
+                    style: CinemaTheme.detailsTextStyle.copyWith(fontSize: 17)),
+                const SizedBox(height: padding),
+                Text(film.details?.overview ?? '',
+                    style: CinemaTheme.detailsTextStyle.copyWith(fontSize: 17)),
+              ],
+            ),
+          ),
         ],
       ),
     );
@@ -38,61 +49,78 @@ class FilmDetailsView extends StatelessWidget {
 
   Widget get _backgroundImage {
     return SizedBox(
-      height: 300,
+      height: backgroundImageHeight,
       child: film.details?.backgroundImage ?? const SizedBox.shrink(),
     );
   }
 
   Widget get _gradient {
     return Container(
-      height: 300,
-      decoration: const BoxDecoration(
+      height: backgroundImageHeight,
+      decoration: BoxDecoration(
         gradient: LinearGradient(
           begin: Alignment.topCenter,
           end: Alignment.bottomCenter,
           colors: [
-            Colors.transparent,
-            Color.fromRGBO(21, 20, 31, 1),
+            CinemaTheme.backgroundColor,
+            Colors.transparent.withOpacity(0.5),
+            CinemaTheme.backgroundColor,
           ],
         ),
       ),
     );
   }
 
-  Widget get _foregroundImage {
+  Widget get _header {
     return Positioned(
-      left: 20,
-      top: 100,
-      child: Container(
-        width: 130,
-        clipBehavior: Clip.hardEdge,
-        decoration: BoxDecoration(borderRadius: BorderRadius.circular(8)),
-        child: film.foregroundImage ?? const SizedBox.shrink(),
+      left: padding,
+      right: padding,
+      bottom: padding / 2,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Container(
+            width: 150,
+            clipBehavior: Clip.hardEdge,
+            decoration: BoxDecoration(borderRadius: BorderRadius.circular(8)),
+            child: film.foregroundImage ?? const SizedBox.shrink(),
+          ),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text('Дата выхода\n${film.releaseDate}',
+                  style: CinemaTheme.detailsTextStyle),
+              Text(film.details?.runtime.toHours ?? '',
+                  style: CinemaTheme.detailsTextStyle),
+              Text('Доход:\n${film.details?.revenue} \$',
+                  style: CinemaTheme.detailsTextStyle),
+            ],
+          ),
+        ],
       ),
     );
   }
 
-  Widget _backNavigation(BuildContext context) {
+  Widget _title(BuildContext context) {
+    final screenWidth = MediaQuery.of(context).size.width;
     return Positioned(
       top: 50,
-      left: 20,
-      child: InkWell(
-        onTap: () => Navigator.pop(context),
-        child: const Icon(Icons.arrow_back_ios_rounded),
-      ),
-    );
-  }
-
-  Widget get _headerInfo {
-    return Positioned(
-      bottom: 20,
-      right: 20,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+      left: padding,
+      child: Row(
         children: [
-          Text('Дата выхода\n${film.releaseDate}'),
-          Text(film.details?.runtime.toHours ?? ''),
-          Text('Доход:\n${film.details?.revenue} \$'),
+          InkWell(
+            onTap: () => Navigator.pop(context),
+            child: const Icon(Icons.arrow_back_ios_rounded),
+          ),
+          const SizedBox(width: padding),
+          SizedBox(
+            width: screenWidth * 0.8,
+            child: Text(
+              film.title,
+              style: CinemaTheme.textStyle.copyWith(fontSize: 32),
+              overflow: TextOverflow.visible,
+            ),
+          ),
         ],
       ),
     );

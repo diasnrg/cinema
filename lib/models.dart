@@ -1,6 +1,5 @@
-import 'package:cached_network_image/cached_network_image.dart';
-import 'package:cinema/network.dart';
 import 'package:flutter/material.dart';
+import 'package:cinema/network.dart';
 
 class Film {
   Film({
@@ -34,8 +33,8 @@ class Film {
 
 // delete widget from model
   Widget? get foregroundImage {
-    _foregroundImage ??= CachedNetworkImage(
-      imageUrl: Network.posterImageUrl(this),
+    _foregroundImage ??= Image.network(
+      Network.posterImageUrl(this),
       fit: BoxFit.cover,
     );
     return _foregroundImage;
@@ -67,8 +66,8 @@ class FilmDetails {
   Widget? _backgroundImage;
 
   Widget? get backgroundImage {
-    return _backgroundImage ??= CachedNetworkImage(
-      imageUrl: Network.backdropImageUrl(this),
+    return _backgroundImage ??= Image.network(
+      Network.backdropImageUrl(this),
       fit: BoxFit.cover,
     );
   }
