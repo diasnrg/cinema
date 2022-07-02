@@ -30,8 +30,6 @@ class Film {
     );
   }
 
-  bool get isFilmDetailsLoaded => details != null;
-
 // delete widget from model
   Widget? get foregroundImage {
     _foregroundImage ??= Image.network(

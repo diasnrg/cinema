@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 import 'package:localization/localization.dart';
 
@@ -29,10 +30,13 @@ class Network {
       throw Exception('errorOccured'.i18n());
     } // handle exception
 
-    final json = (jsonDecode(response.body) as Map<String, dynamic>)['results']
+    return compute(parseFilms, response.body);
+  }
+
+  static List<Film> parseFilms(String responseBody) {
+    final json = (jsonDecode(responseBody) as Map<String, dynamic>)['results']
         as List<dynamic>;
-    final films = json.map((e) => Film.fromJson(e)).toList(); // validate json
-    return films;
+    return json.map((e) => Film.fromJson(e)).toList();
   }
 
   static Future<FilmDetails> getFilmDetails(
