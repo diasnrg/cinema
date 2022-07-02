@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:localization/localization.dart';
 import 'package:cinema/network.dart';
 
 class Film {
@@ -40,8 +41,11 @@ class Film {
     return _foregroundImage;
   }
 
-  Future<void> loadFilmDetails() async {
-    details ??= await Network.getFilmDetails(this); // handle exception
+  Future<void> loadFilmDetails({Language? language}) async {
+    details ??= await Network.getFilmDetails(
+      this,
+      language: language ?? Language.en,
+    ); // handle exception
   }
 }
 
@@ -97,11 +101,16 @@ enum FilmSortingParameter {
   String toString() {
     switch (this) {
       case title:
-        return 'По названию';
+        return 'byTitle'.i18n();
       case releaseDate:
-        return 'По дате выхода';
+        return 'byReleaseDate'.i18n();
       default:
-        return 'По рейтингу';
+        return 'byRating'.i18n();
     }
   }
+}
+
+enum Language {
+  en,
+  ru,
 }

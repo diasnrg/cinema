@@ -1,7 +1,9 @@
+import 'package:cinema/app_cubit.dart';
 import 'package:cinema/theme.dart';
 import 'package:cinema/view/film_details_view.dart';
 import 'package:flutter/material.dart';
 import 'package:cinema/models.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class FilmOverview extends StatelessWidget {
   const FilmOverview(
@@ -15,7 +17,8 @@ class FilmOverview extends StatelessWidget {
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () {
-        film.loadFilmDetails().then((_) {
+        final language = context.read<AppCubit>().state.language;
+        film.loadFilmDetails(language: language).then((_) {
           Navigator.push(
             context,
             MaterialPageRoute(builder: ((context) => FilmDetailsView(film))),
@@ -28,8 +31,7 @@ class FilmOverview extends StatelessWidget {
         child: Stack(
           fit: StackFit.expand,
           children: [
-            film.foregroundImage ??
-                const CircularProgressIndicator(),
+            film.foregroundImage ?? const CircularProgressIndicator(),
             _gradient,
             _titleAndReleaseDate,
             _votes,

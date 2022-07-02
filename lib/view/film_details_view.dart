@@ -1,6 +1,7 @@
 import 'package:cinema/models.dart';
 import 'package:cinema/theme.dart';
 import 'package:flutter/material.dart';
+import 'package:localization/localization.dart';
 
 class FilmDetailsView extends StatelessWidget {
   const FilmDetailsView(
@@ -90,20 +91,21 @@ class FilmDetailsView extends StatelessWidget {
           Container(
             width: 160,
             clipBehavior: Clip.hardEdge,
-            decoration: BoxDecoration(borderRadius: CinemaTheme.cardBorderRadius),
+            decoration:
+                BoxDecoration(borderRadius: CinemaTheme.cardBorderRadius),
             child: film.foregroundImage ?? const SizedBox.shrink(),
           ),
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text('Дата выхода:\n${film.releaseDate}',
+              Text('${'releaseDate'.i18n()}:\n${film.releaseDate}',
                   style: CinemaTheme.detailsTextStyle),
               const SizedBox(height: 12),
               Text(film.details?.runtime.toHours ?? '',
                   style: CinemaTheme.detailsTextStyle),
               if (film.details?.revenue != 0) ...[
                 const SizedBox(height: 12),
-                Text('Доход:\n${film.details?.revenue} \$',
+                Text('${'revenue'.i18n()}:\n${film.details?.revenue} \$',
                     style: CinemaTheme.detailsTextStyle),
               ]
             ],
@@ -117,7 +119,7 @@ class FilmDetailsView extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text('О фильме', style: CinemaTheme.detailsTextStyle),
+        Text('aboutFilm'.i18n(), style: CinemaTheme.detailsTextStyle),
         const SizedBox(height: 8),
         Text(film.details?.genres.join(', ') ?? '',
             style: CinemaTheme.detailsTextStyle
@@ -134,6 +136,6 @@ extension RuntimeMinutesToHoursX on int {
   String get toHours {
     int hours = this ~/ 60;
     int remainder = this % 60;
-    return '$hours часа $remainder минут';
+    return 'runtime'.i18n([hours.toString(), remainder.toString()]);
   }
 }

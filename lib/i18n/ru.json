@@ -1,0 +1,12 @@
+{
+    "films": "Фильмы",
+    "byTitle": "По названию",
+    "byReleaseDate": "По дате выхода",
+    "byRating": "По рейтингу",
+    "aboutFilm": "О фильме",
+    "releaseDate": "Дата выхода",
+    "revenue": "Доход",
+    "errorOccured": "Произошла ошибка",
+    "tryAgain": "Попробовать снова",
+    "runtime": "%s часа %s минут"
+}

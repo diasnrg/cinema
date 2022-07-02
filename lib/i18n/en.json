@@ -1,0 +1,12 @@
+{
+    "films": "Films",
+    "byTitle": "By title",
+    "byReleaseDate": "By release date",
+    "byRating": "By rating",
+    "aboutFilm": "About the film",
+    "releaseDate": "Released date",
+    "revenue": "revenue",
+    "errorOccured": "Error occured",
+    "tryAgain": "Try again",
+    "runtime": "%s hours %s mins"
+}

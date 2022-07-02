@@ -1,10 +1,15 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:localization/localization.dart';
 import 'dart:math' as math;
 
 import 'package:cinema/view/film_overview_view.dart';
 import 'package:cinema/models.dart';
 import 'package:cinema/network.dart';
 import 'package:cinema/theme.dart';
+import 'package:cinema/app_cubit.dart';
 
 class Home extends StatefulWidget {
   const Home({Key? key}) : super(key: key);
@@ -14,40 +19,39 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
-  Future<List<Film>>? films;
-  FilmSortingParameter? sortingParameter;
-
   @override
-  void initState() {
-    super.initState();
-    films = Network.getFilmList();
-    sortingParameter = FilmSortingParameter.values[0];
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    final systemLanguage =
+        Platform.localeName == 'ru_RU' ? Language.ru : Language.en;
+    context.read<AppCubit>().setLanguage(systemLanguage);
+    Network.getFilmList(language: systemLanguage).then((films) {
+      setState(() {
+        context.read<AppCubit>().setFilms(films);
+      });
+    });
   }
 
   @override
   Widget build(BuildContext context) {
+    final films = context.read<AppCubit>().state.films;
+
     return CustomScrollView(
       slivers: [
         SliverToBoxAdapter(child: _header),
         SliverPadding(
           padding: const EdgeInsets.symmetric(vertical: 24, horizontal: 16),
-          sliver: FutureBuilder<List<Film>>(
-            future: films,
-            builder: ((context, snapshot) {
-              if (snapshot.hasData) {
-                final films = snapshot.data!;
-                return _buildOverviewGrid(films);
-              }
-
-              return const SliverToBoxAdapter(
-                child: Center(
-                  child: CircularProgressIndicator(),
-                ),
-              );
-            }),
-          ),
+          sliver: films.isEmpty ? _emptyState : _buildOverviewGrid(films),
         ),
       ],
+    );
+  }
+
+  Widget get _emptyState {
+    return const SliverToBoxAdapter(
+      child: Center(
+        child: CircularProgressIndicator(),
+      ),
     );
   }
 
@@ -59,7 +63,7 @@ class _HomeState extends State<Home> {
         crossAxisAlignment: CrossAxisAlignment.end,
         children: [
           Text(
-            'Фильмы',
+            'films'.i18n(),
             style: CinemaTheme.textStyle.copyWith(fontSize: 32),
           ),
           Container(
@@ -70,7 +74,7 @@ class _HomeState extends State<Home> {
               borderRadius: BorderRadius.circular(20),
             ),
             child: DropdownButton<FilmSortingParameter>(
-              value: sortingParameter,
+              value: context.read<AppCubit>().state.sortingParameter,
               selectedItemBuilder: (context) => FilmSortingParameter.values
                   .map(
                     (e) => Align(
@@ -92,7 +96,8 @@ class _HomeState extends State<Home> {
                   )
                   .toList(),
               onChanged: (value) {
-                setState(() => sortingParameter = value!);
+                setState(
+                    () => context.read<AppCubit>().setSortingParameter(value!));
               },
               icon: Transform.rotate(
                 angle: math.pi / 2,
@@ -112,7 +117,7 @@ class _HomeState extends State<Home> {
   }
 
   Widget _buildOverviewGrid(List<Film> films) {
-    switch (sortingParameter) {
+    switch (context.read<AppCubit>().state.sortingParameter) {
       case FilmSortingParameter.title:
         films.sort((f1, f2) => f1.title.compareTo(f2.title));
         break;
