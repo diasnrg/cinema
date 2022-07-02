@@ -16,29 +16,20 @@ class FilmDetailsView extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: CinemaTheme.backgroundColor,
-      body: Column(
+      body: Stack(
+        clipBehavior: Clip.none,
         children: [
-          Stack(
-            children: [
-              _backgroundImage,
-              _gradient,
-              _title(context),
-              _header,
-            ],
-          ),
-          Padding(
-            padding: const EdgeInsets.all(padding),
+          _backgroundImage,
+          _gradient,
+          Positioned(
+            top: 50,
+            left: padding,
+            right: padding,
             child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const SizedBox(height: padding),
-                Text('О фильме', style: CinemaTheme.detailsTextStyle),
-                const SizedBox(height: padding),
-                Text(film.details?.genres.join(', ') ?? '',
-                    style: CinemaTheme.detailsTextStyle.copyWith(fontSize: 17)),
-                const SizedBox(height: padding),
-                Text(film.details?.overview ?? '',
-                    style: CinemaTheme.detailsTextStyle.copyWith(fontSize: 17)),
+                _title(context),
+                _header,
+                _overview,
               ],
             ),
           ),
@@ -71,16 +62,33 @@ class FilmDetailsView extends StatelessWidget {
     );
   }
 
+  Widget _title(BuildContext context) {
+    return Row(
+      children: [
+        InkWell(
+          onTap: () => Navigator.pop(context),
+          child: const Icon(Icons.arrow_back_ios_rounded),
+        ),
+        const SizedBox(width: padding),
+        Expanded(
+          child: Text(
+            film.title,
+            style: CinemaTheme.textStyle.copyWith(fontSize: 32),
+            overflow: TextOverflow.visible,
+          ),
+        ),
+      ],
+    );
+  }
+
   Widget get _header {
-    return Positioned(
-      left: padding,
-      right: padding,
-      bottom: padding / 2,
+    return Padding(
+      padding: const EdgeInsets.only(top: 12, bottom: 42),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Container(
-            width: 150,
+            width: 160,
             clipBehavior: Clip.hardEdge,
             decoration: BoxDecoration(borderRadius: BorderRadius.circular(8)),
             child: film.foregroundImage ?? const SizedBox.shrink(),
@@ -88,10 +96,12 @@ class FilmDetailsView extends StatelessWidget {
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text('Дата выхода\n${film.releaseDate}',
+              Text('Дата выхода:\n${film.releaseDate}',
                   style: CinemaTheme.detailsTextStyle),
+              const SizedBox(height: 12),
               Text(film.details?.runtime.toHours ?? '',
                   style: CinemaTheme.detailsTextStyle),
+              const SizedBox(height: 12),
               Text('Доход:\n${film.details?.revenue} \$',
                   style: CinemaTheme.detailsTextStyle),
             ],
@@ -101,28 +111,19 @@ class FilmDetailsView extends StatelessWidget {
     );
   }
 
-  Widget _title(BuildContext context) {
-    final screenWidth = MediaQuery.of(context).size.width;
-    return Positioned(
-      top: 50,
-      left: padding,
-      child: Row(
-        children: [
-          InkWell(
-            onTap: () => Navigator.pop(context),
-            child: const Icon(Icons.arrow_back_ios_rounded),
-          ),
-          const SizedBox(width: padding),
-          SizedBox(
-            width: screenWidth * 0.8,
-            child: Text(
-              film.title,
-              style: CinemaTheme.textStyle.copyWith(fontSize: 32),
-              overflow: TextOverflow.visible,
-            ),
-          ),
-        ],
-      ),
+  Widget get _overview {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text('О фильме', style: CinemaTheme.detailsTextStyle),
+        const SizedBox(height: 8),
+        Text(film.details?.genres.join(', ') ?? '',
+            style: CinemaTheme.detailsTextStyle
+                .copyWith(fontSize: 17, color: Colors.white.withOpacity(0.6))),
+        const SizedBox(height: 8),
+        Text(film.details?.overview ?? '',
+            style: CinemaTheme.detailsTextStyle.copyWith(fontSize: 17)),
+      ],
     );
   }
 }
