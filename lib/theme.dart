@@ -21,4 +21,5 @@ class CinemaTheme {
   }
 
   static Color get backgroundColor => const Color(0xFF15141F);
+  static BorderRadius get cardBorderRadius => BorderRadius.circular(8.0);
 }

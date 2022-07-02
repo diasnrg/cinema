@@ -87,3 +87,21 @@ class FilmDetails {
     );
   }
 }
+
+enum FilmSortingParameter {
+  title,
+  releaseDate,
+  voteAverage;
+
+  @override
+  String toString() {
+    switch (this) {
+      case title:
+        return 'По названию';
+      case releaseDate:
+        return 'По дате выхода';
+      default:
+        return 'По рейтингу';
+    }
+  }
+}

@@ -90,7 +90,7 @@ class FilmDetailsView extends StatelessWidget {
           Container(
             width: 160,
             clipBehavior: Clip.hardEdge,
-            decoration: BoxDecoration(borderRadius: BorderRadius.circular(8)),
+            decoration: BoxDecoration(borderRadius: CinemaTheme.cardBorderRadius),
             child: film.foregroundImage ?? const SizedBox.shrink(),
           ),
           Column(
@@ -101,9 +101,11 @@ class FilmDetailsView extends StatelessWidget {
               const SizedBox(height: 12),
               Text(film.details?.runtime.toHours ?? '',
                   style: CinemaTheme.detailsTextStyle),
-              const SizedBox(height: 12),
-              Text('Доход:\n${film.details?.revenue} \$',
-                  style: CinemaTheme.detailsTextStyle),
+              if (film.details?.revenue != 0) ...[
+                const SizedBox(height: 12),
+                Text('Доход:\n${film.details?.revenue} \$',
+                    style: CinemaTheme.detailsTextStyle),
+              ]
             ],
           ),
         ],
@@ -128,7 +130,7 @@ class FilmDetailsView extends StatelessWidget {
   }
 }
 
-extension MinutesToHoursX on int {
+extension RuntimeMinutesToHoursX on int {
   String get toHours {
     int hours = this ~/ 60;
     int remainder = this % 60;

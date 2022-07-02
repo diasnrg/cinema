@@ -24,13 +24,12 @@ class FilmOverview extends StatelessWidget {
       },
       child: Container(
         clipBehavior: Clip.hardEdge,
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(8),
-        ),
+        decoration: BoxDecoration(borderRadius: CinemaTheme.cardBorderRadius),
         child: Stack(
           fit: StackFit.expand,
           children: [
-            film.foregroundImage ?? const SizedBox.shrink(),
+            film.foregroundImage ??
+                const CircularProgressIndicator(),
             _gradient,
             _titleAndReleaseDate,
             _votes,
@@ -42,13 +41,13 @@ class FilmOverview extends StatelessWidget {
 
   Widget get _gradient {
     return Container(
-      decoration: const BoxDecoration(
+      decoration: BoxDecoration(
         gradient: LinearGradient(
-          begin: Alignment.bottomCenter,
-          end: Alignment.topCenter,
+          begin: Alignment.topCenter,
+          end: Alignment.bottomCenter,
           colors: <Color>[
-            Colors.black,
             Colors.transparent,
+            CinemaTheme.backgroundColor,
           ],
         ),
       ),
@@ -58,11 +57,13 @@ class FilmOverview extends StatelessWidget {
   Widget get _titleAndReleaseDate {
     return Positioned(
       left: 12,
-      bottom: 14,
+      right: 12,
+      bottom: 12,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(film.title, style: CinemaTheme.textStyle),
+          const SizedBox(height: 4),
           Text(
             film.releaseDate,
             style: CinemaTheme.textStyle.copyWith(
