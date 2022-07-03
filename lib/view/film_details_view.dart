@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:localization/localization.dart';
 import 'package:cinema/theme.dart';
 
 import '../data/data.dart';
+import 'view.dart';
 
 class FilmDetailsView extends StatelessWidget {
   const FilmDetailsView(
@@ -16,34 +18,51 @@ class FilmDetailsView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final appCubit = context.read<AppCubit>();
+
     return Scaffold(
       backgroundColor: CinemaTheme.backgroundColor,
-      body: Stack(
-        clipBehavior: Clip.none,
-        children: [
-          _backgroundImage,
-          _gradient,
-          Positioned(
-            top: 50,
-            left: padding,
-            right: padding,
-            child: Column(
-              children: [
-                _title(context),
-                _header,
-                _overview,
-              ],
-            ),
-          ),
-        ],
+      body: BlocBuilder<AppCubit, AppState>(
+        builder: ((context, state) {
+          if (state.status.isLoading) {
+            return const Center(child: CircularProgressIndicator());
+          }
+          if (state.status.isError) {
+            return ErrorView(
+              onTap: () => appCubit.loadFilmDetails(film),
+            );
+          }
+
+          return Stack(
+            clipBehavior: Clip.none,
+            children: [
+              _backgroundImage(appCubit),
+              _gradient,
+              Positioned(
+                top: 50,
+                left: padding,
+                right: padding,
+                child: Column(
+                  children: [
+                    _title(context),
+                    _header(appCubit),
+                    _overview,
+                  ],
+                ),
+              ),
+            ],
+          );
+        }),
       ),
     );
   }
 
-  Widget get _backgroundImage {
-    return SizedBox(
+  Widget _backgroundImage(AppCubit appCubit) {
+    return Image(
+      width: double.infinity,
       height: backgroundImageHeight,
-      child: film.details?.backgroundImage ?? const SizedBox.shrink(),
+      image: appCubit.backgroundImage(film),
+      fit: BoxFit.cover,
     );
   }
 
@@ -83,7 +102,7 @@ class FilmDetailsView extends StatelessWidget {
     );
   }
 
-  Widget get _header {
+  Widget _header(AppCubit appCubit) {
     return Padding(
       padding: const EdgeInsets.only(top: 12, bottom: 42),
       child: Row(
@@ -94,7 +113,10 @@ class FilmDetailsView extends StatelessWidget {
             clipBehavior: Clip.hardEdge,
             decoration:
                 BoxDecoration(borderRadius: CinemaTheme.cardBorderRadius),
-            child: film.foregroundImage ?? const SizedBox.shrink(),
+            child: Image(
+              image: appCubit.foregroundImage(film)!,
+              fit: BoxFit.cover,
+            ),
           ),
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,

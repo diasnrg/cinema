@@ -1,6 +1,4 @@
-import 'package:flutter/material.dart';
 import 'package:localization/localization.dart';
-import 'data.dart';
 
 class Film {
   Film({
@@ -18,7 +16,6 @@ class Film {
   final double voteAverage;
   final String posterPath;
   FilmDetails? details;
-  Widget? _foregroundImage;
 
   factory Film.fromJson(Map<String, dynamic> json) {
     return Film(
@@ -29,63 +26,39 @@ class Film {
       posterPath: json['poster_path'],
     );
   }
-
-// delete widget from model
-  Widget? get foregroundImage {
-    _foregroundImage ??= Image.network(
-      Network.posterImageUrl(this),
-      fit: BoxFit.cover,
-    );
-    return _foregroundImage;
-  }
-
-  Future<void> loadFilmDetails({Language? language}) async {
-    details ??= await Network.getFilmDetails(
-      this,
-      language: language ?? Language.en,
-    ); // handle exception
-  }
 }
 
 class FilmDetails {
   FilmDetails({
     required this.id,
     required this.isForAdults,
-    required this.backdropPath,
     required this.revenue,
-    required this.genres,
     required this.runtime,
+    required this.genres,
     required this.overview,
+    required this.backdropPath,
   });
 
   final int id;
   final bool isForAdults;
   final int revenue;
-  final List<String> genres;
   final int runtime;
+  final List<String> genres;
   final String overview;
   final String backdropPath;
-  Widget? _backgroundImage;
-
-  Widget? get backgroundImage {
-    return _backgroundImage ??= Image.network(
-      Network.backdropImageUrl(this),
-      fit: BoxFit.cover,
-    );
-  }
 
   factory FilmDetails.fromJson(Map<String, dynamic> json) {
     return FilmDetails(
       id: json['id'],
       isForAdults: json['adult'],
-      backdropPath: json['backdrop_path'],
       revenue: json['revenue'],
+      runtime: json['runtime'],
       genres: (json['genres'] as List<dynamic>)
           .toList()
           .map((e) => e['name'] as String)
           .toList(),
-      runtime: json['runtime'],
       overview: json['overview'],
+      backdropPath: json['backdrop_path'],
     );
   }
 }

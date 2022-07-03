@@ -17,13 +17,11 @@ class FilmOverview extends StatelessWidget {
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () {
-        final language = context.read<AppCubit>().state.language;
-        film.loadFilmDetails(language: language).then((_) {
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: ((context) => FilmDetailsView(film))),
-          );
-        });
+        context.read<AppCubit>().loadFilmDetails(film);
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: ((context) => FilmDetailsView(film))),
+        );
       },
       child: Container(
         clipBehavior: Clip.hardEdge,
@@ -31,7 +29,10 @@ class FilmOverview extends StatelessWidget {
         child: Stack(
           fit: StackFit.expand,
           children: [
-            film.foregroundImage ?? const CircularProgressIndicator(),
+            Image(
+              image: context.read<AppCubit>().foregroundImage(film)!,
+              fit: BoxFit.cover,
+            ),
             _gradient,
             _titleAndReleaseDate,
             _votes,

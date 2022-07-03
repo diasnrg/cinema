@@ -5,11 +5,9 @@ import 'package:cinema/theme.dart';
 class ErrorView extends StatelessWidget {
   const ErrorView({
     Key? key,
-    this.description = '',
     required this.onTap,
   }) : super(key: key);
 
-  final String description;
   final VoidCallback onTap;
 
   @override
@@ -21,10 +19,6 @@ class ErrorView extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Text('errorOccured'.i18n(), style: CinemaTheme.detailsTextStyle),
-            Text(
-              description,
-              style: CinemaTheme.detailsTextStyle.copyWith(fontSize: 14),
-            ),
             const SizedBox(height: 32),
             InkWell(
               onTap: onTap,

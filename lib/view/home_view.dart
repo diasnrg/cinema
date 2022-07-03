@@ -13,28 +13,33 @@ class Home extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<AppCubit, AppState>(
-      builder: (context, state) {
-        if (state.status.isLoading) {
-          return const Center(child: CircularProgressIndicator());
-        }
-        if (state.status.isError) {
-          return ErrorView(onTap: () => context.read<AppCubit>().loadFilms());
-        }
-        if (state.films.isEmpty) {
-          return Center(child: Text('is empty', style: CinemaTheme.textStyle));
-        }
+    return RefreshIndicator(
+      onRefresh: () => context.read<AppCubit>().reload(),
+      child: BlocBuilder<AppCubit, AppState>(
+        builder: (context, state) {
+          if (state.status.isLoading) {
+            return const Center(child: CircularProgressIndicator());
+          }
+          if (state.status.isError) {
+            return ErrorView(onTap: () => context.read<AppCubit>().loadFilms());
+          }
+          if (state.films.isEmpty) {
+            return Center(
+                child: Text('is empty', style: CinemaTheme.textStyle));
+          }
 
-        return CustomScrollView(
-          slivers: [
-            SliverToBoxAdapter(child: _header),
-            SliverPadding(
-              padding: const EdgeInsets.symmetric(vertical: 24, horizontal: 16),
-              sliver: _buildOverviewGrid(context, state.films),
-            ),
-          ],
-        );
-      },
+          return CustomScrollView(
+            slivers: [
+              SliverToBoxAdapter(child: _header),
+              SliverPadding(
+                padding:
+                    const EdgeInsets.symmetric(vertical: 24, horizontal: 16),
+                sliver: _buildOverviewGrid(state.films),
+              ),
+            ],
+          );
+        },
+      ),
     );
   }
 
@@ -49,21 +54,13 @@ class Home extends StatelessWidget {
             'films'.i18n(),
             style: CinemaTheme.textStyle.copyWith(fontSize: 32),
           ),
-          // if (kDebugMode)
-          //   ElevatedButton(
-          //     onPressed: _setSystemLocale,
-          //     child: Text('loc'),
-          //   ),
           const _SortingDropdownView(),
         ],
       ),
     );
   }
 
-  Widget _buildOverviewGrid(BuildContext context, List<Film> films) {
-    final sortingParameter = context.read<AppCubit>().state.sortingParameter;
-    _sortFilms(films, sortingParameter);
-
+  Widget _buildOverviewGrid(List<Film> films) {
     return SliverGrid.count(
       crossAxisCount: 2,
       mainAxisSpacing: 12,
@@ -71,22 +68,6 @@ class Home extends StatelessWidget {
       childAspectRatio: 0.7,
       children: [...films.map((e) => FilmOverview(e)).toList()],
     );
-  }
-
-  void _sortFilms(
-    List<Film> films,
-    FilmSortingParameter sortingParameter,
-  ) {
-    switch (sortingParameter) {
-      case FilmSortingParameter.title:
-        films.sort((f1, f2) => f1.title.compareTo(f2.title));
-        break;
-      case FilmSortingParameter.releaseDate:
-        films.sort((f1, f2) => f2.releaseDate.compareTo(f1.releaseDate));
-        break;
-      default:
-        films.sort((f1, f2) => f2.voteAverage.compareTo(f1.voteAverage));
-    }
   }
 }
 

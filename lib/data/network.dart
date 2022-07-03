@@ -1,14 +1,13 @@
 import 'dart:convert';
 import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
-import 'package:localization/localization.dart';
 import 'data.dart';
 
 class Network {
   static const String baseUrl = 'https://api.themoviedb.org/3';
-    // static const String baseUrl = 'https://api.themoviedb.org/3w';
   static const String imageBaseUrl = 'https://image.tmdb.org/t/p';
   static const String apiKey = '2f05ecb893a6f356e596873f1972d65b';
+
   static const String popularFilmListUrl =
       '$baseUrl/movie/popular?api_key=$apiKey';
 
@@ -30,10 +29,10 @@ class Network {
       throw Exception('http request error');
     }
 
-    return compute(parseFilms, response.body);
+    return compute(_parseFilms, response.body);
   }
 
-  static List<Film> parseFilms(String responseBody) {
+  static List<Film> _parseFilms(String responseBody) {
     final json = (jsonDecode(responseBody) as Map<String, dynamic>)['results']
         as List<dynamic>;
     return json.map((e) => Film.fromJson(e)).toList();
@@ -46,11 +45,14 @@ class Network {
     final response =
         await http.get(Uri.parse(filmDetailsUrl(film.id, language: language)));
     if (response.statusCode != 200) {
-      throw Exception('errorOccured'.i18n());
-    } // handle exception
+      throw Exception('http request error');
+    }
 
-    final json = jsonDecode(response.body) as Map<String, dynamic>;
-    final filmDetails = FilmDetails.fromJson(json);
-    return filmDetails;
+    return compute(_parseFilmDetails, response.body);
+  }
+
+  static FilmDetails _parseFilmDetails(String responseBody) {
+    final json = jsonDecode(responseBody) as Map<String, dynamic>;
+    return FilmDetails.fromJson(json);
   }
 }
