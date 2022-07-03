@@ -25,7 +25,7 @@ class Home extends StatelessWidget {
           }
           if (state.films.isEmpty) {
             return Center(
-                child: Text('is empty', style: CinemaTheme.textStyle));
+                child: Text('List is empty', style: CinemaTheme.textStyle));
           }
 
           return CustomScrollView(
@@ -34,12 +34,22 @@ class Home extends StatelessWidget {
               SliverPadding(
                 padding:
                     const EdgeInsets.symmetric(vertical: 24, horizontal: 16),
-                sliver: _buildOverviewGrid(state.films),
+                sliver: _buildFilmCardGrid(state.films),
               ),
             ],
           );
         },
       ),
+    );
+  }
+
+  Widget _buildFilmCardGrid(List<Film> films) {
+    return SliverGrid.count(
+      crossAxisCount: 2,
+      mainAxisSpacing: 12,
+      crossAxisSpacing: 12,
+      childAspectRatio: 0.7,
+      children: [...films.map((e) => FilmCardView(e)).toList()],
     );
   }
 
@@ -57,16 +67,6 @@ class Home extends StatelessWidget {
           const _SortingDropdownView(),
         ],
       ),
-    );
-  }
-
-  Widget _buildOverviewGrid(List<Film> films) {
-    return SliverGrid.count(
-      crossAxisCount: 2,
-      mainAxisSpacing: 12,
-      crossAxisSpacing: 12,
-      childAspectRatio: 0.7,
-      children: [...films.map((e) => FilmOverview(e)).toList()],
     );
   }
 }

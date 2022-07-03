@@ -22,8 +22,6 @@ class App extends StatelessWidget {
       create: (_) => AppCubit(),
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
-        themeMode: ThemeMode.dark,
-        darkTheme: ThemeData.dark(),
         localizationsDelegates: [
           GlobalMaterialLocalizations.delegate,
           LocalJsonLocalization.delegate,
@@ -32,14 +30,9 @@ class App extends StatelessWidget {
           Locale('en', ''),
           Locale('ru', ''),
         ],
-        home: SafeArea(
-          top: false,
-          left: false,
-          right: false,
-          child: Scaffold(
-            backgroundColor: CinemaTheme.backgroundColor,
-            body: const Home(),
-          ),
+        home: Scaffold(
+          backgroundColor: CinemaTheme.backgroundColor,
+          body: const Home(),
         ),
       ),
     );

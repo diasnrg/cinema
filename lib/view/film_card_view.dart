@@ -5,8 +5,8 @@ import 'package:cinema/theme.dart';
 import 'view.dart';
 import '../data/data.dart';
 
-class FilmOverview extends StatelessWidget {
-  const FilmOverview(
+class FilmCardView extends StatelessWidget {
+  const FilmCardView(
     this.film, {
     Key? key,
   }) : super(key: key);

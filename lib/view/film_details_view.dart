@@ -88,7 +88,10 @@ class FilmDetailsView extends StatelessWidget {
       children: [
         InkWell(
           onTap: () => Navigator.pop(context),
-          child: const Icon(Icons.arrow_back_ios_rounded),
+          child: const Icon(
+            Icons.arrow_back_ios_rounded,
+            color: Colors.white,
+          ),
         ),
         const SizedBox(width: padding),
         Expanded(
