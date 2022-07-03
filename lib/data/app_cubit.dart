@@ -1,31 +1,36 @@
 import 'dart:io';
-
-import 'package:cinema/network.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'data.dart';
 
-import 'models.dart';
 
 class AppCubit extends Cubit<AppState> {
   AppCubit() : super(AppState()) {
-    final systemLanguage =
-        Platform.localeName == 'ru_RU' ? Language.ru : Language.en;
-    setLanguage(systemLanguage);
+    _init();
   }
 
-  void setLanguage(Language language) {
-    emit(state.copyWith(language: language));
+  void _init() {
+    final systemLanguage =
+        Platform.localeName == 'ru_RU' ? Language.ru : Language.en;
+    setSystemLanguage(systemLanguage);
     loadFilms();
   }
 
-  void loadFilms() {
+  void setSystemLanguage(Language language) {
+    emit(state.copyWith(language: language));
+  }
+
+  Future<void> loadFilms() async {
     emit(state.copyWith(status: AppStatus.loading));
 
-    Network.getFilmList(language: state.language).then(
-      (films) => emit(state.copyWith(
+    try {
+      final films = await Network.getFilmList(language: state.language);
+      emit(state.copyWith(
         films: films,
         status: AppStatus.success,
-      )),
-    );
+      ));
+    } catch (e) {
+      emit(state.copyWith(status: AppStatus.error));
+    }
   }
 
   void setSortingParameter(FilmSortingParameter sortingParameter) {
@@ -44,7 +49,9 @@ class AppState {
   final Language language;
   final FilmSortingParameter sortingParameter;
   final List<Film> films;
+  // cached images
   final AppStatus status;
+  
 
   AppState copyWith({
     Language? language,
@@ -66,4 +73,9 @@ enum AppStatus {
   loading,
   success,
   error,
+}
+
+extension AppStatusX on AppStatus {
+  bool get isLoading => this == AppStatus.loading;
+  bool get isError => this == AppStatus.error;
 }

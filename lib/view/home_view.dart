@@ -1,15 +1,12 @@
-import 'dart:io';
-
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:localization/localization.dart';
 import 'dart:math' as math;
 
-import 'package:cinema/view/film_overview_view.dart';
-import 'package:cinema/models.dart';
 import 'package:cinema/theme.dart';
-import 'package:cinema/app_cubit.dart';
+
+import 'view.dart';
+import '../data/data.dart';
 
 class Home extends StatelessWidget {
   const Home({Key? key}) : super(key: key);
@@ -17,25 +14,27 @@ class Home extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<AppCubit, AppState>(
-      builder: (context, state) => CustomScrollView(
-        slivers: [
-          SliverToBoxAdapter(child: _header),
-          SliverPadding(
-            padding: const EdgeInsets.symmetric(vertical: 24, horizontal: 16),
-            sliver: state.films.isEmpty
-                ? _emptyState
-                : _buildOverviewGrid(context, state.films),
-          ),
-        ],
-      ),
-    );
-  }
+      builder: (context, state) {
+        if (state.status.isLoading) {
+          return const Center(child: CircularProgressIndicator());
+        }
+        if (state.status.isError) {
+          return ErrorView(onTap: () => context.read<AppCubit>().loadFilms());
+        }
+        if (state.films.isEmpty) {
+          return Center(child: Text('is empty', style: CinemaTheme.textStyle));
+        }
 
-  Widget get _emptyState {
-    return const SliverToBoxAdapter(
-      child: Center(
-        child: CircularProgressIndicator(),
-      ),
+        return CustomScrollView(
+          slivers: [
+            SliverToBoxAdapter(child: _header),
+            SliverPadding(
+              padding: const EdgeInsets.symmetric(vertical: 24, horizontal: 16),
+              sliver: _buildOverviewGrid(context, state.films),
+            ),
+          ],
+        );
+      },
     );
   }
 

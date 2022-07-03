@@ -1,7 +1,8 @@
-import 'package:cinema/models.dart';
-import 'package:cinema/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:localization/localization.dart';
+import 'package:cinema/theme.dart';
+
+import '../data/data.dart';
 
 class FilmDetailsView extends StatelessWidget {
   const FilmDetailsView(

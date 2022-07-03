@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:localization/localization.dart';
-import 'package:cinema/network.dart';
+import 'data.dart';
 
 class Film {
   Film({

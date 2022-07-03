@@ -1,9 +1,9 @@
-import 'package:cinema/app_cubit.dart';
-import 'package:cinema/theme.dart';
-import 'package:cinema/view/film_details_view.dart';
 import 'package:flutter/material.dart';
-import 'package:cinema/models.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:cinema/theme.dart';
+
+import 'view.dart';
+import '../data/data.dart';
 
 class FilmOverview extends StatelessWidget {
   const FilmOverview(

@@ -1,13 +1,11 @@
-import 'dart:io';
-
-import 'package:cinema/app_cubit.dart';
-import 'package:cinema/models.dart';
 import 'package:flutter/material.dart';
-import 'package:cinema/theme.dart';
-import 'package:cinema/view/home_view.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:localization/localization.dart';
+import 'package:cinema/theme.dart';
+
+import 'data/data.dart';
+import 'view/view.dart';
 
 void main() {
   runApp(const App());

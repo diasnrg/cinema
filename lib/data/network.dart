@@ -2,11 +2,11 @@ import 'dart:convert';
 import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 import 'package:localization/localization.dart';
-
-import 'package:cinema/models.dart';
+import 'data.dart';
 
 class Network {
   static const String baseUrl = 'https://api.themoviedb.org/3';
+    // static const String baseUrl = 'https://api.themoviedb.org/3w';
   static const String imageBaseUrl = 'https://image.tmdb.org/t/p';
   static const String apiKey = '2f05ecb893a6f356e596873f1972d65b';
   static const String popularFilmListUrl =
@@ -27,8 +27,8 @@ class Network {
         .get(Uri.parse('$popularFilmListUrl&language=${language.name}'));
 
     if (response.statusCode != 200) {
-      throw Exception('errorOccured'.i18n());
-    } // handle exception
+      throw Exception('http request error');
+    }
 
     return compute(parseFilms, response.body);
   }
