@@ -1,16 +1,20 @@
-# cinema
+# Cinema app
+Client for api.themoviedb.org API using Flutter SDK to displey the list of films and their detailed information.
 
-A new Flutter project.
+## Features and optimizations
+**sorting list of films by parameters: rating, title and release date.**
+**parsing json in isolate (compute)**
+**using system locale for app localization**
+**cubit for state management**
 
-## Getting Started
+### Screenshots
+<img src="https://github.com/diasnrg/cinema/blob/main/assets/images/film_cards.jpg" width="200">
+<img src="https://github.com/diasnrg/cinema/blob/main/assets/images/film_details.jpg" width="200">
 
-This project is a starting point for a Flutter application.
+### Demo
+<img src="https://github.com/diasnrg/cinema/blob/main/assets/gifs/demo.gif" width="200"/>
 
-A few resources to get you started if this is your first Flutter project:
+### System locale and error handling
+<img src="https://github.com/diasnrg/cinema/blob/main/assets/gifs/demo_locale.gif" width="200">
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+<img src="https://github.com/diasnrg/cinema/blob/main/assets/gifs/demo_error.gif" width="200"/>
